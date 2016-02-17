@@ -1,0 +1,3 @@
+Open the script file in SQL Management Studio. Drop your existing INSINSTANCE Database. Run the script. Everything will be populated again from scratch.
+
+The script also includes Insert statements. So, some data will exist in the tables.

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6 lt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7 lt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8 lt8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="UTF-8" />
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">  -->
+        <title>INS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Login and Registration Form with HTML5 and CSS3" />
+        <meta name="keywords" content="html5, css3, form, switch, animation, :target, pseudo-class" />
+        <meta name="author" content="Codrops" />
+        <link rel="shortcut icon" href="../favicon.ico"> 
+        <link rel="stylesheet" type="text/css" href="css/demo.css" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/animate-custom.css" />
+
+<script src="js/jquery-2.1.1.js"></script>
+<script>
+var userNameUnique = false;
+
+/**
+ * This function checks the login fields and call the Login servlet to check username and password. 
+ * If login is successful, it loads the Dashboard page.
+ */
+function loginCheck()
+{	
+	$("#loginButton").blur();
+	$("#errorSignIn").hide();
+	var username = $("#username").val();
+	var password = $("#password").val();
+	var result = username.lastIndexOf("@");
+	if(result == -1)
+	{
+		username = username.concat("@utdallas.edu");
+	}
+	$.post( "Login",{username:username,password:password}, function( data ) {
+		if(data == "success")
+		{
+			location.replace("Dashboard");
+		}
+		else
+		{
+			$("#username").val("");
+			$("#password").val("");
+			$("#errorSignIn").show();
+		}
+	});
+	return false;
+}
+
+/**
+  * This function checks the Sign Up fields and call the SignUp servlet to register the user. 
+  * If registration is successful, it loads the Dashboard page.
+  */
+function signUpCheck() 
+{
+	$("#signUpButton").blur();
+	$("#errorPass").hide();
+	$("#errorEmail").hide();
+	$("#errorEmailDuplicate").hide();
+	var firstName = $("#firstnamesignup").val();
+	var lastName = $("#lastnamesignup").val();
+	var emailID = $("#emailsignup").val();
+	var pass = $("#passwordsignup").val();
+	var pass_confirm = $("#passwordsignup_confirm").val();
+	var phone = $("#phonesignup").val();
+	if(pass != pass_confirm)
+	{
+	$("#errorPass").show();
+	return false;
+	}
+	
+	if(userNameUnique)
+	{
+		$.post( "SignUp",{
+			firstName:firstName,
+			lastName:lastName,
+			emailID:emailID,
+			pass:pass,
+			phone:phone
+			}, 
+			function( data ) {
+			if(data == "success")
+			{
+				location.replace("Dashboard");
+			}
+			else
+			{
+				alert(1);
+				//TODO: SHOW THE ERROR PAGE
+			}
+		});
+	}
+	return false;
+}
+
+/**
+ * This function checks if the username entered is unique
+ */
+function checkUniqueUsername()
+{
+	 userNameUnique = false;
+	 var emailID = $("#emailsignup").val();
+	 $("#errorEmailDuplicate").hide();
+	 $("#errorEmail").hide();
+	 if(emailID.substring(emailID.lastIndexOf("@")+1)!="utdallas.edu")
+	 {
+		 $("#errorEmail").show();
+		 if(!$("#signUpButton").is(":disabled"))
+			 $("#signUpButton").attr('disabled','disabled');	 
+		 return;
+	 }
+	 var emailID = $("#emailsignup").val();
+	 $.post( "CheckEmailAddress",{emailid:emailID}, function( data ) {
+		 if(data == "success")
+		 {
+			 userNameUnique = true;
+			 $("#signUpButton").removeAttr("disabled");
+			 $("#errorEmailDuplicate").hide();
+		 }
+		 else
+		 {
+			 userNameUnique = false;
+			 if(!$("#signUpButton").is(":disabled"))
+			 	$("#signUpButton").attr('disabled','disabled');
+			 $("#errorEmailDuplicate").show();			 
+		 }
+		 });
+}
+
+
+</script>
+
+</head>
+
+   <body>
+        <div class="container">
+            <header>
+                <h1><span>INTELLIGENT</span> NOTIFICATION SYSTEM</h1>
+				
+            </header>
+            <section>				
+                <div id="container_demo" >
+                    <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
+                    <a class="hiddenanchor" id="toregister"></a>
+                    <a class="hiddenanchor" id="tologin"></a>
+                    <div id="wrapper">
+                        <div id="login" class="animate form">
+                            <form  action="Login" method="post" autocomplete="on" onsubmit="return loginCheck();"> 
+                                <h1>Log in</h1> 
+
+								<font id="errorSignIn" hidden="hidden" size="2px" color="red">Please enter the correct UserName/Password<br><br></font>
+
+                                
+                                
+                                <p> 
+                                    <label for="username" class="uname" data-icon="u" > Email or username </label>
+                                    <input id="username" name="username" required="required" type="text" placeholder="myusername or mymail@utdallas.edu"/>
+                                </p>
+                                <p> 
+                                    <label for="password" class="youpasswd" data-icon="p"> Password </label>
+                                    <input id="password" name="password" required="required" type="password" placeholder="eg. X8df!90EO" /> 
+                                </p>
+                                
+                                <p class="login button"> 
+                                    <input id="loginButton" type="submit" value="Login" /> 
+								</p>
+                                <p class="change_link">
+									Not a member yet ?
+									<a href="#toregister" class="to_register">Join us</a>
+								</p>
+                            </form>
+                        </div>
+
+                        <div id="register" class="animate form">
+                            <form  name="signUpForm" autocomplete="on" action="SignUp" method="post" onsubmit="return signUpCheck();"> 
+                                <h1> Sign up </h1> 
+                                <p> 
+                                    <label for="usernamesignup" class="uname" data-icon="u">First Name</label>
+                                    <input id="firstnamesignup" name="firstnamesignup" required="required" type="text" placeholder="John" />
+                                </p>
+								<p> 
+                                    <label for="usernamesignup" class="uname" data-icon="u">Last Name</label>
+                                    <input id="lastnamesignup" name="lastnamesignup" required="required" type="text" placeholder="Smith" />
+                                </p>
+                                <p> 
+                                    <label for="phonesignup" class="phone" data-icon="e" >Mobile No</label>
+                                    <input id="phonesignup" name="phonesignup" required="required" placeholder="+14694529534"/> 
+                                </p>
+                                <p> 
+                                    <label for="emailsignup" class="youmail" data-icon="e" >Email</label>
+                                    <input id="emailsignup" onkeyup="checkUniqueUsername()" name="emailsignup" required="required" type="email"  placeholder="mysupermail@utdallas.edu"/> 
+                                </p>
+                                <font id="errorEmail" hidden="hidden" size="2px" color="red">Please enter a valid UT Dallas e-mail address<br><br></font>
+                                <font id="errorEmailDuplicate" hidden="hidden" size="2px" color="red">This UT Dallas e-mail address is already registered in our system.<br><br></font>
+                                
+                                <p> 
+                                    <label for="passwordsignup" class="youpasswd" data-icon="p">Password </label>
+                                    <input id="passwordsignup" name="passwordsignup" required="required" type="password" placeholder="eg. X8df!90EO"/>
+                                </p>
+                                <p> 
+                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">Please confirm your password </label>
+                                    <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="eg. X8df!90EO"/>
+                                </p>
+                                <font id="errorPass" hidden="hidden" size="2px" color="red">The passwords do not match<br><br></font>
+                                
+                                <p class="signin button"> 
+									<input id="signUpButton" type="submit" value="Sign up"/> 
+								</p>
+                                <p class="change_link">  
+									Already a member ?
+									<a href="#tologin" class="to_register"> Go and log in </a>
+								</p>
+                            </form>
+                        </div>
+						
+                    </div>
+                </div>  
+            </section>
+        </div>
+    </body>
+</html>

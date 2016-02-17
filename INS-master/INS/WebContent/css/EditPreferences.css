@@ -1,0 +1,51 @@
+html,body {
+	margin:0;
+	padding:0;
+	height: 100%;
+}
+body{
+	font-family: Cambria, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+	background: #fff url(../images/bg.jpg) repeat top left;
+	font-weight: 400;
+	font-size: 15px;
+	color: #1d3c41;
+	overflow-y: scroll;
+}
+a{
+	color: #333;
+	text-decoration: none;
+}
+#logOut{
+	float:right;
+	text-decoration:underline;
+	margin-right:10px;
+	padding-right:10px;
+}
+.clr{
+	clear: both;
+}
+#selectPreferences
+{
+	margin:20px;
+	padding:10px;
+}
+#checkboxItems{
+-moz-column-count:2; /* Firefox */
+-webkit-column-count:2; /* Safari and Chrome */
+column-count:2;
+}
+#eventNotification{
+	float:right;
+	width: 550px;
+}
+#eventNotification span{
+	font-weight:600;
+}
+#notifyBefore{
+}
+#newsLetterSpan{
+	display:none;
+}
+input[type="text"] {
+    width: 75px;
+}
